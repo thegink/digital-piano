@@ -178,10 +178,10 @@ uint8_t readKey(uint8_t address)
     PORT_A04 &= ~PORTMASK_A04;
     PORT_A04 |= (address << PORTSHIFT_A04) & PORTMASK_A04;
 
-    //delay 225ns
-    //at 100MHz, each cycle takes 10ns
-    //for (uint8_t i=0; i<22; i++)
-    for (uint8_t i=0; i<220; i++)
+    //from datasheet, need to delay 225ns between setting the address and reading the switches
+    //at a 40-nop delay, some scans are incorrect (double notes being played)
+    //increase to 80 for safety
+    for (uint8_t i=0; i<80; i++)
     {
         __asm("nop");
     }
@@ -326,6 +326,7 @@ void buttonChange(ButtonType_t button, bool value)
 void scanInputs()
 {
     //TODO: Does this need optimising with port writes?
+    //Adds ~8us to the loop time of ~200us, so no.
 
     //Pedal
     bool pedal = digitalRead(PINS_Pedal);
