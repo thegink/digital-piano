@@ -180,8 +180,9 @@ uint8_t readKey(uint8_t address)
 
     //from datasheet, need to delay 225ns between setting the address and reading the switches
     //at a 40-nop delay, some scans are incorrect (double notes being played)
-    //increase to 80 for safety
-    for (uint8_t i=0; i<80; i++)
+    //at an 80-nop delay, occasional scans are incorrect (dticking/repeated notes)
+    //increase to 160 for safety
+    for (uint8_t i=0; i<160; i++)
     {
         __asm("nop");
     }
@@ -344,35 +345,35 @@ void scanInputs()
     digitalWrite(PINS_LED, _PanelStatus.leds[0]);
 
     //Panel
-    PanelStatus_t newPanelStatus;
-    digitalWrite(PINS_Panel_C0, LOW);
-    digitalWrite(PINS_Panel_C1, HIGH);
+    // PanelStatus_t newPanelStatus = {0};
+    // digitalWrite(PINS_Panel_C0, LOW);
+    // digitalWrite(PINS_Panel_C1, HIGH);
 
-    newPanelStatus.button[0] = digitalRead(PINS_Panel_S0);
-    newPanelStatus.button[1] = digitalRead(PINS_Panel_S1);
+    // newPanelStatus.button[0] = digitalRead(PINS_Panel_S0);
+    // newPanelStatus.button[1] = digitalRead(PINS_Panel_S1);
 
-    digitalWrite(PINS_Panel_L0, _PanelStatus.leds[0]);
-    digitalWrite(PINS_Panel_L1, _PanelStatus.leds[1]);
-
-
-    digitalWrite(PINS_Panel_C0, HIGH);
-    digitalWrite(PINS_Panel_C1, LOW);
-
-    newPanelStatus.button[2] = digitalRead(PINS_Panel_S0);
-    newPanelStatus.button[3] = digitalRead(PINS_Panel_S1);
-
-    digitalWrite(PINS_Panel_L0, _PanelStatus.leds[2]);
-    digitalWrite(PINS_Panel_L1, _PanelStatus.leds[3]);
+    // digitalWrite(PINS_Panel_L0, _PanelStatus.leds[0]);
+    // digitalWrite(PINS_Panel_L1, _PanelStatus.leds[1]);
 
 
-    //Check for button changes
-    for (uint8_t i=0; i<ButtonCount; i++)
-    {
-        if (newPanelStatus.button[i] != _PanelStatus.button[i])
-        {
-            buttonChange((ButtonType_t)i, newPanelStatus.button[i]);
-        }
-    }
+    // digitalWrite(PINS_Panel_C0, HIGH);
+    // digitalWrite(PINS_Panel_C1, LOW);
+
+    // newPanelStatus.button[2] = digitalRead(PINS_Panel_S0);
+    // newPanelStatus.button[3] = digitalRead(PINS_Panel_S1);
+
+    // digitalWrite(PINS_Panel_L0, _PanelStatus.leds[2]);
+    // digitalWrite(PINS_Panel_L1, _PanelStatus.leds[3]);
+
+
+    // //Check for button changes
+    // for (uint8_t i=0; i<ButtonCount; i++)
+    // {
+    //     if (newPanelStatus.button[i] != _PanelStatus.button[i])
+    //     {
+    //         buttonChange((ButtonType_t)i, newPanelStatus.button[i]);
+    //     }
+    // }
 
 }
 
